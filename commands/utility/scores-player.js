@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { findPlayerByUsername } = require('../../db/player.js');
+const { findPlayerByUsername, findPlayers } = require('../../db/player.js');
 const { findScoresByPlayer } = require('../../db/score.js');
-const { findMaps, findMapById } = require('../../db/map.js');
+const { findMaps } = require('../../db/map.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,7 +11,18 @@ module.exports = {
             option.setName('username')
                 .setDescription('Nom d\'utilisateur du joueur')
                 .setRequired(true)
+                .setAutocomplete(true)
         ),
+    async autocomplete(interaction) {
+        const focusedValue = interaction.options.getFocused();
+        const players = findPlayers();
+        const filtered = players.filter(player => player.username.toLowerCase().includes(focusedValue.toLowerCase()));
+        const choices = filtered.slice(0, 25).map(player => ({
+            name: player.username,
+            value: player.username
+        }));
+        await interaction.respond(choices);
+    },
     async execute(interaction) {
         const username = interaction.options.getString('username');
         const player = findPlayerByUsername(username);
