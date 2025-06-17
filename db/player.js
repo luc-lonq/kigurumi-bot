@@ -38,9 +38,18 @@ function createPlayer(osu_id, username) {
 	stmt.run(osu_id, username);
 }
 
+function removePlayer(id) {
+  const stmt = db.prepare(`
+    DELETE FROM players
+    WHERE id = ?
+  `);
+  stmt.run(id);
+}
+
 module.exports = {
     findPlayerById,
     findPlayerByUsername,
     findPlayers,
     createPlayer,
+    removePlayer
 };

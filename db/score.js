@@ -48,10 +48,28 @@ function findScoresByMap(map_id) {
     return scores;
 }
 
+function removeScoreFromPlayer(player_id) {
+    const stmt = db.prepare(`
+    DELETE FROM scores
+    WHERE player_id = ?
+  `);
+    stmt.run(player_id);
+}
+
+function removeScoreFromMap(map_id) {
+    const stmt = db.prepare(`
+    DELETE FROM scores
+    WHERE map_id = ?
+  `);
+    stmt.run(map_id);
+}
+
 module.exports = {
     findScore,
     findScores,
     createScore,
     findScoresByPlayer,
     findScoresByMap,
+    removeScoreFromPlayer,
+    removeScoreFromMap
 };

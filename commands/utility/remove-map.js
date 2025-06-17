@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { findScoresByMap } = require('../../db/score.js');
+const { removeScoreFromMap } = require('../../db/score.js');
 const { findMapById, findMaps, removeMap } = require('../../db/map.js');
 
 module.exports = {
@@ -40,13 +40,7 @@ module.exports = {
                 ephemeral: true
             });
         }
-        const scores = await findScoresByMap(map.id);
-        if (scores.length > 0) {
-            return interaction.reply({
-                content: `❌ Impossible de supprimer la map **${map.title}** car elle a des scores associés.`,
-                ephemeral: true
-            });
-        }
+        await removeScoreFromMap(map.id);
         await removeMap(map.id);
         await interaction.reply({
             content: `✅ La map **${map.title}** a été supprimée avec succès.`,
