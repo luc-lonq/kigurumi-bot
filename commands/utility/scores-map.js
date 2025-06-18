@@ -3,7 +3,7 @@ const { findScoresByMap } = require('../../db/score.js');
 const { findMapById, findMaps } = require('../../db/map.js');
 const { findPlayers } = require('../../db/player.js')
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 module.exports = {
     data: new SlashCommandBuilder()

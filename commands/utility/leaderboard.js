@@ -1,7 +1,9 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { findMaps } = require('../../db/map.js');
 const { findPlayers } = require('../../db/player.js');
 const { findScores } = require('../../db/score.js');
+
+const PAGE_SIZE = 10;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -57,18 +59,81 @@ module.exports = {
             return;
         }
 
-        const embed = new EmbedBuilder()
-            .setTitle('🏆 Classement')
-            .setColor(0x0099FF)
-            .setTimestamp();
+        function generateEmbed(page) {
+            const embed = new EmbedBuilder()
+                .setTitle('🏆 Classement')
+                .setColor(0x0099FF)
+                .setTimestamp();
 
-        const lines = leaderboard.map((entry, index) =>
-            `**#${index + 1}** – ${entry.player.username} : **${entry.ratio.toFixed(2)}** (${entry.totalMisscount} :x:)`
-        );
+            const start = page * PAGE_SIZE;
+            const end = start + PAGE_SIZE;
+            const leaderboardPage = leaderboard.slice(start, end);
 
-        embed.setDescription(lines.join('\n'));
+            if (leaderboardPage.length === 0) {
+                embed.setDescription('Aucun joueur trouvé pour cette page.');
+                return embed;
+            }
 
-        await interaction.reply({ embeds: [embed] });
+            for (const [i, entry] of leaderboardPage.entries()) {
+                const position = start + i + 1;
+                embed.addFields({
+                    name: `#${position} - ${entry.player.username}`,
+                    value: `**${entry.ratio.toFixed(2)}** - ${entry.totalMisscount} :x:`,
+                    inline: false
+                });
+            }
+            embed.setFooter({ text: `Page ${page + 1} / ${Math.ceil(leaderboard.length / PAGE_SIZE)}` });
+            return embed;
+        }
+        
+        function getRow(page, maxPage) {
+            return new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('prev')
+                    .setLabel('Précédent')
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(page === 0),
+                new ButtonBuilder()
+                    .setCustomId('next')
+                    .setLabel('Suivant')
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(page === maxPage)
+            );
+        }
+
+        let page = 0;
+        const maxPage = Math.max(0, Math.ceil(leaderboard.length / PAGE_SIZE) - 1);
+
+        const message = await interaction.reply({
+            embeds: [generateEmbed(page)],
+            components: [getRow(page, maxPage)],
+            fetchReply: true
+        });
+
+        if (maxPage === 0) return;
+
+        const collector = message.createMessageComponentCollector({
+            filter: i => i.user.id === interaction.user.id,
+            time: 60000
+        });
+
+        collector.on('collect', async i => {
+            if (i.customId === 'prev' && page > 0) page--;
+            if (i.customId === 'next' && page < maxPage) page++;
+            await i.update({
+                embeds: [generateEmbed(page)],
+                components: [getRow(page, maxPage)]
+            });
+        });
+
+        collector.on('end', async () => {
+            await message.edit({
+                components: [getRow(page, maxPage).setComponents(
+                    ...getRow(page, maxPage).components.map(btn => btn.setDisabled(true))
+                )]
+            });
+        });
+
     }
 };
 

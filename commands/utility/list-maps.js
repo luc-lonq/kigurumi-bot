@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { findMaps } = require('../../db/map.js');
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 module.exports = {
     data: new SlashCommandBuilder()
