@@ -1,7 +1,9 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { findScoresByMap } = require('../../db/score.js');
 const { findMapById, findMaps } = require('../../db/map.js');
 const { findPlayers } = require('../../db/player.js')
+
+const PAGE_SIZE = 3;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -40,26 +42,83 @@ module.exports = {
         const scores = await findScoresByMap(map.id);
         const players = await findPlayers();
 
-        const embed = new EmbedBuilder()
-            .setTitle(`🏆 Classement - ${map.title} - ${map.artist} [${map.version}]`)
-            .setColor('#00bfff')
-            .setTimestamp();
+        function generateEmbed(page) {
+            const embed = new EmbedBuilder()
+                .setTitle(`🏆 Classement - ${map.title} - ${map.artist} [${map.version}]`)
+                .setColor('#00bfff')
+                .setTimestamp();
 
-        if (scores.length === 0) {
-            embed.setDescription('Aucun score trouvé pour cette map.');
-        } else {
-            scores.sort((a, b) => a.misses - b.misses);
+            if (scores.length === 0) {
+                embed.setDescription('Aucun score trouvé pour cette map.');
+            } else {
+                const start = page * PAGE_SIZE;
+                const end = start + PAGE_SIZE;
+                scores.sort((a, b) => a.misses - b.misses);
+                const scoresPage = scores.slice(start, end);
 
-            const top = scores.map((score, index) => {
-                const player = players.find(p => p.id === score.player_id);
-                if (!player) return null;
+                for (const [i, score] of scoresPage.entries()) {
+                    const player = players.find(p => p.id === score.player_id);
+                    if (!player) continue;
+                    const position = page * PAGE_SIZE + i + 1;
+                    embed.addFields({
+                        name: `#${position} - ${player.username}`,
+                        value: `${score.misses} ❌`,
+                        inline: false
+                    });
+}
+                embed.setFooter({ text: `Page ${page + 1} / ${Math.ceil(scores.length / PAGE_SIZE)}` });
+            }
 
-                return `**#${index + 1}** – ${player.username} : ${score.misses} ❌`;
-            }).filter(Boolean);
+            return embed;
+        }
+            
 
-            embed.setDescription(top.join('\n'));
+        function getRow(page, maxPage) {
+            return new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('prev')
+                    .setLabel('Précédent')
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(page === 0),
+                new ButtonBuilder()
+                    .setCustomId('next')
+                    .setLabel('Suivant')
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(page === maxPage)
+            );
         }
 
-        await interaction.reply({ embeds: [embed] });
+        let page = 0;
+        const maxPage = Math.max(0, Math.ceil(scores.length / PAGE_SIZE) - 1);
+
+        const message = await interaction.reply({
+            embeds: [generateEmbed(page)],
+            components: [getRow(page, maxPage)],
+            fetchReply: true
+        });
+
+        if (maxPage === 0) return;
+
+        const collector = message.createMessageComponentCollector({
+            filter: i => i.user.id === interaction.user.id,
+            time: 60000
+        });
+
+        collector.on('collect', async i => {
+            if (i.customId === 'prev' && page > 0) page--;
+            if (i.customId === 'next' && page < maxPage) page++;
+            await i.update({
+                embeds: [generateEmbed(page)],
+                components: [getRow(page, maxPage)]
+            });
+        });
+
+        collector.on('end', async () => {
+            await message.edit({
+                components: [getRow(page, maxPage).setComponents(
+                    ...getRow(page, maxPage).components.map(btn => btn.setDisabled(true))
+                )]
+            });
+        });
     }
 };
