@@ -24,18 +24,21 @@ async function getRecentScore(username) {
 
     const score = scoresRes.data[0];
     if (!score) {
-        return false;
+        return {message: `Aucun score trouvé pour le joueur ${username}.`};
     }
 
     const map = findMapByBeatmapId(score.beatmap.id);
     if (!map) {
-        console.error('Map not found');
-        return false;
+        return {message: `La map du dernier score n'est pas présente dans le mappool.`};
+    }
+
+    if (map.mod && !score.mods.includes(map.mod)) {
+        return {message: `La map ${map.title} - ${map.artist} [${map.version}] doit être jouée avec le mod ${map.mod}.`};
     }
 
     const oldScore = findScore(player.id, map.id);
 
-    if (oldScore && oldScore.misses > score.statistics.count_miss) {
+    if (!oldScore || oldScore.misses > score.statistics.count_miss) {
         createScore(player.id, map.id, score.statistics.count_miss, score.max_combo, score.accuracy);
     }
 
@@ -45,6 +48,7 @@ async function getRecentScore(username) {
         version: score.beatmap.version,
         miss: score.statistics.count_miss,
         previous: oldScore ? oldScore.misses : null,
+        mod: map.mod || null,
     };
 }
 

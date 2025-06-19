@@ -21,7 +21,7 @@ module.exports = {
         const maps = await findMaps(focused);
 
         const choices = maps.slice(0, 25).map(map => ({
-            name: `${map.title} - ${map.artist} [${map.version}]`,
+            name: `${map.title} - ${map.artist} [${map.version}] ${map.mod ? `(+${map.mod})` : ''}`,
             value: map.id.toString()
         }));
 

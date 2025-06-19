@@ -10,6 +10,15 @@ module.exports = {
             option.setName('beatmap_id')
                 .setDescription('ID de la beatmap')
                 .setRequired(true)
+        )
+       .addStringOption(option =>
+            option.setName('mod')
+                .setDescription('Mod de la beatmap')
+                .setRequired(false)
+                .addChoices(
+                    { name: 'DT', value: 'DT' },
+                    { name: 'HR', value: 'HR' },
+                )
         ),
         
     async execute(interaction) {
@@ -28,9 +37,12 @@ module.exports = {
             return;
         }
 
-        createMap(mapDetails.id, mapDetails.title, mapDetails.artist, mapDetails.version);
+        createMap(mapDetails.id, mapDetails.title, mapDetails.artist, mapDetails.version, interaction.options.getString('mod') || null);
 
-
-        await interaction.reply(`La beatmap ${mapDetails.title} a été ajoutée.`);
+        let modText = interaction.options.getString('mod') ? `+${interaction.options.getString('mod')}` : '';
+        await interaction.reply({
+            content: `✅ La beatmap ${mapDetails.title} [${mapDetails.version}] ${modText ? `(${modText}) ` : ''}a été ajoutée avec succès.`,
+            ephemeral: true
+        });
     }
 };

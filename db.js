@@ -14,7 +14,8 @@ db.exec(`
     beatmap_id INTEGER UNIQUE,
     title TEXT,
     artist TEXT,
-    version TEXT
+    version TEXT,
+    mod TEXT NULL
   );
 
   CREATE TABLE IF NOT EXISTS scores (
@@ -29,5 +30,15 @@ db.exec(`
     UNIQUE(player_id, map_id)
   );
 `);
+
+const pragma = db.prepare(`PRAGMA table_info(maps);`).all();
+const hasModColumn = pragma.some(col => col.name === 'mod');
+
+if (!hasModColumn) {
+    db.exec(`ALTER TABLE maps ADD COLUMN mod TEXT;`);
+    console.log('Colonne "mod" ajoutée à la table maps.');
+} else {
+    console.log('La colonne "mod" existe déjà dans la table maps.');
+}
 
 module.exports = db;
