@@ -47,7 +47,7 @@ module.exports = {
             }
         }
 
-        const modString = mods.length > 0 ? '+' + mods.join('') : '';
+        const modString = score.mods.length > 0 ? '+' + mods.join('') : '';
 
         const embed = new EmbedBuilder()
             .setTitle(`🎯 Dernier score de ${username}`)
