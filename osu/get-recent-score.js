@@ -50,7 +50,9 @@ async function getRecentScore(username) {
         previous: oldScore ? oldScore.misses : null,
         accuracy: (score.accuracy * 100).toFixed(2),
         combo: score.max_combo,
+        mod: map.mod || null,
         mods: score.mods,
+        star_rating: map.star_rating,
     };
 }
 

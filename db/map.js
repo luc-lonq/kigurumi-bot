@@ -2,7 +2,7 @@ const db = require('../db');
 
 function findMaps() {
     const stmt = db.prepare(`
-    SELECT id, beatmap_id, title, artist, version, mod
+    SELECT id, beatmap_id, title, artist, version, mod, star_rating
     FROM maps
   `);
     const maps = stmt.all();
@@ -11,7 +11,7 @@ function findMaps() {
 
 function findMapById(id) {
     const stmt = db.prepare(`
-    SELECT id, beatmap_id, title, artist, version, mod
+    SELECT id, beatmap_id, title, artist, version, mod, star_rating
     FROM maps
     WHERE id = ?
   `);
@@ -21,7 +21,7 @@ function findMapById(id) {
 
 function findMapByBeatmapId(beatmap_id) {
     const stmt = db.prepare(`
-    SELECT id, beatmap_id, title, artist, version, mod
+    SELECT id, beatmap_id, title, artist, version, mod, star_rating
     FROM maps
     WHERE beatmap_id = ?
   `);
@@ -29,13 +29,13 @@ function findMapByBeatmapId(beatmap_id) {
     return map;
 }
 
-function createMap(beatmap_id, title, artist, version, mod) {
+function createMap(beatmap_id, title, artist, version, mod, star_rating) {
     const stmt = db.prepare(`
-    INSERT INTO maps (beatmap_id, title, artist, version, mod)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO maps (beatmap_id, title, artist, version, mod, star_rating)
+    VALUES (?, ?, ?, ?, ?, ?)
     ON CONFLICT(beatmap_id) DO UPDATE SET title = excluded.title, artist = excluded.artist, version = excluded.version
   `);
-    stmt.run(beatmap_id, title, artist, version, mod);
+    stmt.run(beatmap_id, title, artist, version, mod, star_rating);
 }
 
 function removeMap(id) {

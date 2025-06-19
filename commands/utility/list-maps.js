@@ -30,8 +30,8 @@ module.exports = {
             }
             for (const map of mapsPage) {
                 embed.addFields({
-                    name: `${map.title} - ${map.artist}`,
-                    value: `[${map.version}] ${map.mod ? `(**+${map.mod}**)` : ''} - https://osu.ppy.sh/beatmaps/${map.beatmap_id}`,
+                    name: `${map.title} - ${map.artist} [${map.version}]`,
+                    value: `${map.mod ? `(**+${map.mod}**) ` : ''}:star: ${map.star_rating.toFixed(2)} - https://osu.ppy.sh/beatmaps/${map.beatmap_id}`,
                     inline: false
                 });
             }

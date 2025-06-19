@@ -31,13 +31,13 @@ module.exports = {
 
         const beatmap_id = interaction.options.getString('beatmap_id');
 
-        const mapDetails = await getMap(beatmap_id);
+        const mapDetails = await getMap(beatmap_id, interaction.options.getString('mod'));
         if (!mapDetails) {
             await interaction.reply(`La beatmap avec l'ID ${beatmap_id} n'existe pas.`);
             return;
         }
 
-        createMap(mapDetails.id, mapDetails.title, mapDetails.artist, mapDetails.version, interaction.options.getString('mod') || null);
+        createMap(mapDetails.id, mapDetails.title, mapDetails.artist, mapDetails.version, interaction.options.getString('mod') || null, mapDetails.star_rating, mapDetails.max_combo);
 
         let modText = interaction.options.getString('mod') ? `+${interaction.options.getString('mod')}` : '';
         await interaction.reply({
