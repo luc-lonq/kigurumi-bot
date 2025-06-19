@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, EmbedBuilder } = require('@discordjs/builders');
 const { findPlayerByUsername, createPlayer } = require('../../db/player.js');
 const { getPlayer } = require('../../osu/get-player.js');
 
@@ -25,17 +25,32 @@ module.exports = {
         res = await getPlayer(username);
 
         if (!res) {
-            await interaction.reply(`Le joueur osu! ${username} n'existe pas.`);
+            await interaction.reply({
+                content: `Le joueur osu! ${username} n'existe pas.`,
+                ephemeral: true
+            });
             return;
         }
 
         const existingPlayer = findPlayerByUsername(username);
         if (existingPlayer) {
-            await interaction.reply(`Le joueur osu! ${username} est déjà enregistré.`);
+            await interaction.reply({
+                content: `Le joueur osu! ${username} est déjà enregistré.`,
+                ephemeral: true
+            });
             return;
         }
         createPlayer(res.id, res.username);
 
-        await interaction.reply(`Joueur osu! enregistré : ${username}`);
+        embed = new EmbedBuilder()
+            .setTitle(`Joueur osu! enregistré`)
+            .setDescription(`Le joueur osu! **${res.username}** a été enregistré avec succès.`)
+            .setColor('#00bfff')
+            .setTimestamp();
+
+        await  interaction.reply({
+            embeds: [embed],
+            ephemeral: true
+        });
     }
 };
