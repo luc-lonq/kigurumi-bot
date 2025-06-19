@@ -48,7 +48,9 @@ async function getRecentScore(username) {
         version: score.beatmap.version,
         miss: score.statistics.count_miss,
         previous: oldScore ? oldScore.misses : null,
-        mod: map.mod || null,
+        accuracy: (score.accuracy * 100).toFixed(2),
+        combo: score.max_combo,
+        mod: score.mods,
     };
 }
 

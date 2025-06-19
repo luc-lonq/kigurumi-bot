@@ -47,12 +47,14 @@ module.exports = {
             }
         }
 
+        const modString = mods.length > 0 ? '+' + mods.join('') : '';
+
         const embed = new EmbedBuilder()
             .setTitle(`🎯 Dernier score de ${username}`)
             .setColor('#ff66aa')
             .addFields({
-                name: `🎵 **${score.title}** - *${score.artist}* [${score.version}] ${score.mod ? `(+${score.mod})` : ''}`,
-                value: `**${score.miss} :x:** ${variation} - ${score.accuracy}% - ${score.combo}x`,
+                name: `🎵 **${score.title}** - *${score.artist}* [${score.version}]}`,
+                value: `**${score.miss} :x:** ${variation} | ${modString} - ${score.accuracy}% - ${score.combo}x`,
                 inline: false
             })
             .setTimestamp();
