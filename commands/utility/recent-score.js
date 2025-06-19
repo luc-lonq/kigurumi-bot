@@ -51,8 +51,8 @@ module.exports = {
             .setTitle(`🎯 Dernier score de ${username}`)
             .setColor('#ff66aa')
             .addFields({
-                name: `🎵 **${score.title}** - *${score.artist}* [${score.version}] ${score.mod ? `(+${score.mod})` : ''}]`,
-                value: `**${score.miss} :x:** ${variation}`,
+                name: `🎵 **${score.title}** - *${score.artist}* [${score.version}] ${score.mod ? `(+${score.mod})` : ''}`,
+                value: `**${score.miss} :x:** ${variation} - ${score.accuracy}% - ${score.combo}x`,
                 inline: false
             })
             .setTimestamp();
