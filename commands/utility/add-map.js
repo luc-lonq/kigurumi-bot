@@ -24,7 +24,7 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.member.permissions.has('Administrator')) {
             return interaction.reply({
-                content: '❌ Cette commande est réservée aux administrateurs.',
+                content: ':x: Cette commande est réservée aux administrateurs.',
                 ephemeral: true
             });
         }
@@ -41,7 +41,7 @@ module.exports = {
 
         let modText = interaction.options.getString('mod') ? `+${interaction.options.getString('mod')}` : '';
         await interaction.reply({
-            content: `✅ La beatmap ${mapDetails.title} [${mapDetails.version}] ${modText ? `(${modText}) ` : ''}a été ajoutée avec succès.`,
+            content: `:white_check_mark: La beatmap ${mapDetails.title} [${mapDetails.version}] ${modText ? `(${modText}) ` : ''}a été ajoutée avec succès.`,
             ephemeral: true
         });
     }

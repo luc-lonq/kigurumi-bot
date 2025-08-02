@@ -26,7 +26,7 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.member.permissions.has('Administrator')) {
             return interaction.reply({
-                content: '❌ Cette commande est réservée aux administrateurs.',
+                content: ':x: Cette commande est réservée aux administrateurs.',
                 ephemeral: true
             });
         }
@@ -35,14 +35,14 @@ module.exports = {
         const player = players.find(p => p.username.toLowerCase() === username.toLowerCase());
         if (!player) {
             return interaction.reply({
-                content: `❌ Le joueur osu! **${username}** n'existe pas.`,
+                content: `:x: Le joueur osu! **${username}** n'existe pas.`,
                 ephemeral: true
             });
         }
         await removeScoreFromPlayer(player.id);
         await removePlayer(player.id);
         await interaction.reply({
-            content: `✅ Le joueur osu! **${username}** a été supprimé avec succès.`,
+            content: `:white_check_mark: Le joueur osu! **${username}** a été supprimé avec succès.`,
             ephemeral: true
         });
     }

@@ -54,7 +54,7 @@ module.exports = {
                     : `Aucun score`;
 
                 embed.addFields({
-                    name: `🎵 ${map.title} - ${map.artist} [${map.version}] ${map.mod ? `(+${map.mod})` : ''}`,
+                    name: `:musical_note: ${map.title} - ${map.artist} [${map.version}] ${map.mod ? `(+${map.mod})` : ''}`,
                     value: fieldValue,
                     inline: false
                 });

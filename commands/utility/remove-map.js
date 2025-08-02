@@ -28,7 +28,7 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.member.permissions.has('Administrator')) {
             return interaction.reply({
-                content: '❌ Cette commande est réservée aux administrateurs.',
+                content: ':x: Cette commande est réservée aux administrateurs.',
                 ephemeral: true
             });
         }
@@ -36,14 +36,14 @@ module.exports = {
         const map = await findMapById(mapId);
         if (!map) {
             return interaction.reply({
-                content: `❌ La map avec l'ID **${mapId}** n'existe pas.`,
+                content: `:x: La map avec l'ID **${mapId}** n'existe pas.`,
                 ephemeral: true
             });
         }
         await removeScoreFromMap(map.id);
         await removeMap(map.id);
         await interaction.reply({
-            content: `✅ La map **${map.title}** a été supprimée avec succès.`,
+            content: `:white_check_mark: La map **${map.title}** a été supprimée avec succès.`,
             ephemeral: true
         });
     }

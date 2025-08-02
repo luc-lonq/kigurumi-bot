@@ -18,7 +18,7 @@ module.exports = {
         const player = await getPlayer(username);
         if (!player) {
             return interaction.reply({
-                content: `❌ Le joueur osu! **${username}** n'existe pas.`,
+                content: `:x: Le joueur osu! **${username}** n'existe pas.`,
                 ephemeral: true
             });
         }
@@ -28,12 +28,12 @@ module.exports = {
         const link = await createLink(createdPlayer.id, interaction.user.id);
         if (link) {
             return interaction.reply({
-                content: `✅ `,
+                content: `:white_check_mark: Le compte osu! **${username}** a été lié avec succès à votre compte Discord.`,
                 ephemeral: true
             });
         } else {
             return interaction.reply({
-                content: `❌ Une erreur est survenue lors de la liaison du compte osu! **${username}**.`,
+                content: `:x: Une erreur est survenue lors de la liaison du compte osu! **${username}**.`,
                 ephemeral: true
             });
         }

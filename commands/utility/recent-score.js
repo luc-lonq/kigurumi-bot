@@ -32,7 +32,7 @@ module.exports = {
             const link = await findLinkByDiscordId(interaction.user.id);
             if (!link) {
                 await interaction.reply({
-                    content: '❌ Vous devez lier votre compte osu! avec votre compte Discord pour utiliser cette commande.',
+                    content: ':x: Vous devez lier votre compte osu! avec votre compte Discord pour utiliser cette commande.',
                     ephemeral: true
                 });
                 return;
@@ -40,7 +40,7 @@ module.exports = {
             player = await findPlayerById(link.player_id);
             if (!player) {
                 await interaction.reply({
-                    content: `❌ Le joueur osu! avec l'ID **${link.player_id}** n'existe pas.`,
+                    content: `:x: Le joueur osu! avec l'ID **${link.player_id}** n'existe pas.`,
                     ephemeral: true
                 });
                 return;
@@ -54,7 +54,7 @@ module.exports = {
         }
         if (score.message) {
             await interaction.reply({
-                content: `❌ ${score.message}`,
+                content: `:x: ${score.message}`,
                 ephemeral: true
             });
             return;

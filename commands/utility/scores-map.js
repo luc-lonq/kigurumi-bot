@@ -34,7 +34,7 @@ module.exports = {
 
         if (!map) {
             return interaction.reply({
-                content: `❌ La map avec l'ID **${mapId}** n'existe pas.`,
+                content: `:x: La map avec l'ID **${mapId}** n'existe pas.`,
                 ephemeral: true
             });
         }
@@ -44,7 +44,7 @@ module.exports = {
 
         function generateEmbed(page) {
             const embed = new EmbedBuilder()
-                .setTitle(`🏆 Classement - ${map.title} - ${map.artist} [${map.version}]`)
+                .setTitle(`:trophy: Classement - ${map.title} - ${map.artist} [${map.version}]`)
                 .setColor('#00bfff')
                 .setTimestamp();
 
@@ -62,7 +62,7 @@ module.exports = {
                     const position = page * PAGE_SIZE + i + 1;
                     embed.addFields({
                         name: `#${position} - ${player.username}`,
-                        value: `${score.misses} ❌`,
+                        value: `${score.misses} :x:`,
                         inline: false
                     });
 }

@@ -16,7 +16,7 @@ module.exports = {
 
         function generateEmbed(page) {
             const embed = new EmbedBuilder()
-                .setTitle('Liste des Maps 🎵')
+                .setTitle('Liste des Maps :musical_note:')
                 .setColor('#00bfff')
                 .setTimestamp();
 

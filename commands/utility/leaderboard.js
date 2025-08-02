@@ -61,7 +61,7 @@ module.exports = {
 
         function generateEmbed(page) {
             const embed = new EmbedBuilder()
-                .setTitle('🏆 Classement')
+                .setTitle(':trophy: Classement')
                 .setColor(0x0099FF)
                 .setTimestamp();
 
