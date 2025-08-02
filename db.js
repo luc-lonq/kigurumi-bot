@@ -31,12 +31,6 @@ db.exec(`
         UNIQUE(player_id, map_id)
     );
 
-    CREATE TABLE IF NOT EXISTS mappools (
-        id INTEGER PRIMARY KEY,
-        name TEXT UNIQUE,
-        description TEXT
-    );
-
     CREATE TABLE IF NOT EXISTS link (
         id INTEGER PRIMARY KEY,
         player_id INTEGER,
