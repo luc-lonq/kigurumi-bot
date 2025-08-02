@@ -1,7 +1,8 @@
 {
-    "token":"MTM3MTk0MjA4NzM2ODUxMTYzMQ.GQIvqF.5JaAPzr0b5Hva3Sb3mImrDfKm2iS9bLnSRsOjg",
-    "clientId":"1371942087368511631",
-    "guildId":"1371941930287501544",
-    "osuClientId":"40758",
-    "osuClientSecret":"YFr3sKNFmGXd8uT5zR9ejYhlp6vYz00nwAzcpIpP"
+    // Don't even try, I changed the api keys
+    "token":"",
+    "clientId":"",
+    "guildId":"",
+    "osuClientId":"",
+    "osuClientSecret":""
 }
