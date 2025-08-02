@@ -36,6 +36,7 @@ function createPlayer(osu_id, username) {
     ON CONFLICT(osu_id) DO UPDATE SET username = excluded.username
   `);
 	stmt.run(osu_id, username);
+    return findPlayerByUsername(username);
 }
 
 function removePlayer(id) {

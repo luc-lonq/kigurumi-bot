@@ -4,19 +4,19 @@ const { getOsuToken } = require('./get-token.js');
 async function getPlayer(username) {
     const token = await getOsuToken();
 
-    const userRes = await axios.get(`https://osu.ppy.sh/api/v2/users/${encodeURIComponent(username)}/osu`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    
-    if (userRes.status !== 200) {
-        console.error(userRes);
+    try {
+        const userRes = await axios.get(`https://osu.ppy.sh/api/v2/users/${encodeURIComponent(username)}/osu`, {
+            headers: {Authorization: `Bearer ${token}`}
+        });
+
+        return {
+            'id': userRes.data.id,
+            'username': userRes.data.username,
+        };
+    } catch (error) {
+        console.error(`Error fetching player data for ${username}:`, error);
         return false;
     }
-
-    return {
-        'id': userRes.data.id,
-        'username': userRes.data.username,
-    };
 }
 
 module.exports = {
